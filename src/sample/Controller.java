@@ -57,6 +57,8 @@ public class Controller implements Initializable {
     public Text cashOwned;
     @FXML
     public Text timer;
+
+    public int playerCash = 100;
     int high = 10;
     int low = 1;
     Random diceRoll = new Random();
@@ -64,14 +66,11 @@ public class Controller implements Initializable {
     int randomOrange = diceRoll.nextInt(high);
     int randomBanana = diceRoll.nextInt(high);
     int randomGrape = diceRoll.nextInt(high);
-    private int counterBuyApple = 0;
-    private int counterBuyOrange = 0;
-    private int counterBuyBanana = 0;
-    private int counterBuyGrape = 0;
-    private int counterSellApple = 0;
-    private int counterSellOrange = 0;
-    private int counterSellBanana = 0;
-    private int counterSellGrape = 0;
+    private int counterApple = 0;
+    private int counterOrange = 0;
+    private int counterBanana = 0;
+    private int counterGrape = 0;
+
     public int countTimer = 16;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -79,64 +78,77 @@ public class Controller implements Initializable {
         setUpClock();
     }
     public void  updateBoxes(){
-        // int totalCash = counterBuyApple + counterSellApple + counterSellGrape + counterBuyGrape + counterSellBanana + counterSellBanana + counterSellOrange + counterBuyOrange
-        int orCashSell = randomOrange * counterSellOrange;
-        int apCashSell = randomApple * counterSellApple;
-        int grCashSell = randomGrape * counterSellGrape;
-        int baCashSell = randomBanana * counterSellBanana;
-        int orCashBuy = randomOrange * counterBuyOrange;
-        int apCashBuy = randomApple * counterBuyApple;
-        int baCashBuy = randomBanana * counterBuyBanana;
-        int grCashBuy = randomGrape * counterBuyGrape;
-        int totalCash = 100 - (orCashBuy + orCashSell + apCashBuy + apCashSell + grCashBuy + grCashSell + baCashBuy + baCashSell + grCashBuy + grCashSell);
-        boxApple.setText("Apples Owned: " + (counterBuyApple + counterSellApple));
-        boxOrange.setText("Oranges Owned: " + (counterBuyOrange + counterSellOrange));
-        boxBanana.setText("Bananas Owned: " + (counterBuyBanana + counterSellBanana));
-        boxGrape.setText("Grapes Owned: " + (counterBuyGrape + counterSellGrape));
+
         priceApple.setText("Price: $" + randomApple);
         priceOrange.setText("Price: $" + randomOrange);
         priceBanana.setText("Price: $" + randomBanana);
         priceGrape.setText("Price: $" + randomGrape);
-        cashOwned.setText("Cash Available: $" + totalCash);
+
+        boxApple.setText("Apples Owned: " + counterApple);
+        boxOrange.setText("Oranges Owned: " + counterOrange);
+        boxBanana.setText("Bananas Owned: " + counterBanana);
+        boxGrape.setText("Grapes Owned: " + counterGrape);
+
+        cashOwned.setText("Cash Available: $" + playerCash);
+        //boxSellApple.setText("Averages: $" + (counterApple/playerCash));
     }
-    public void clickBuyApple(ActionEvent actionEvent){
-        counterBuyApple++;
-        updateBoxes();
+    public void clickBuyApple(ActionEvent actionEvent) {
+        if (playerCash > randomApple) {
+            playerCash = playerCash - randomApple;
+            counterApple++;
+            updateBoxes();
+        }
     }
+
     public void clickBuyOrange(ActionEvent actionEvent){
-        counterBuyOrange++;
-        updateBoxes();
+        if (playerCash > randomOrange) {
+            playerCash = playerCash - randomOrange;
+            counterOrange++;
+            updateBoxes();
+        }
     }
     public void clickBuyBanana(ActionEvent actionEvent){
-        counterBuyBanana++;
-        updateBoxes();
+        if (playerCash > randomBanana) {
+            playerCash = playerCash - randomBanana;
+            counterBanana++;
+            updateBoxes();
+        }
     }
     public void clickBuyGrape(ActionEvent actionEvent){
-        counterBuyGrape++;
-        updateBoxes();
+        if (playerCash > randomGrape) {
+            playerCash = playerCash - randomGrape;
+            counterGrape++;
+            updateBoxes();
+        }
     }
     public void clickSellApple(ActionEvent actionEvent){
-//        totalOwnedApple = counterBuyApple + counterSellApple;
-//        if (totalOwnedApple < 2){
-//            btnSellApple.setDisable(true);
-//            updateBoxes();
-//        } else if (totalOwnedApple > 0){
-//            btnSellApple.setDisable(false);
-//            updateBoxes();
-//        }
-        counterSellApple--;
+        if (counterApple > 0){
+            playerCash = playerCash + randomApple;
+            counterApple--;
+            updateBoxes();
+        }
+    }
+    public void clickSellOrange(ActionEvent actionEvent) {
+        if (counterOrange > 0) {
+            playerCash = playerCash + randomOrange;
+            counterOrange--;
+            updateBoxes();
+        }
+    }
+
+    public void clickSellBanana(ActionEvent actionEvent){
+    if (counterBanana > 0){
+        playerCash = playerCash + randomBanana;
+        counterBanana--;
         updateBoxes();
     }
-    public void clickSellOrange(ActionEvent actionEvent){
-        counterSellOrange--;
-        updateBoxes();
-    }   public void clickSellBanana(ActionEvent actionEvent){
-        counterSellBanana--;
-        updateBoxes();
-    }
+}
     public void clickSellGrape(ActionEvent actionEvent){
-        counterSellGrape--;
-        updateBoxes();
+        if (counterGrape > 0){
+            playerCash = playerCash + randomGrape;
+            counterGrape--;
+            updateBoxes();
+        }
     }
     public void setUpClock(){
         TimerTask task = new TimerTask() {
